@@ -141,17 +141,28 @@ function Mandala({ className = "" }: { className?: string }) {
     </svg>
   );
 }
-
 function Poster() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+
+  const [loading, setLoading] = useState(false);
+
   const { playTrack } = useMusic();
+
+  useEffect(() => {
+    setLoading(true);
+
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSeeMore = () => {
     playTrack("wedding12");
     navigate({ to: "/details" });
   };
-
+  
   const shareWA = () => {
     const text = `You're invited to ${WEDDING.bride} & ${WEDDING.groom}'s wedding on ${WEDDING.dateLabel}. ${typeof window !== "undefined" ? window.location.href : ""}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
