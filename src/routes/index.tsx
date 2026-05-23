@@ -245,6 +245,7 @@ function Poster() {
         <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.4em] text-gold/70">
           ✦ Save the Date ✦
         </p>
+        
       </main>
     </>
   );

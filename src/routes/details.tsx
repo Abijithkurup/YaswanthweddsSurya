@@ -13,6 +13,7 @@ import photo3 from "@/assets/photo3.jpeg";
 import photo4 from "@/assets/photo4.jpeg";
 import photo5 from "@/assets/photo5.jpeg";
 import photo6 from "@/assets/photo6.jpeg";
+import ifloopLogo from "@/assets/ifloop-logo.png";
 
 
 export const Route = createFileRoute("/details")({
@@ -398,6 +399,25 @@ function Details() {
           <p className="gold-divider mt-8">{WEDDING.dateLabel}</p>
         </Reveal>
       </footer>
+      <div className="mt-14 pb-6 flex flex-col items-center justify-center">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-0">
+            Developed By
+          </p>
+
+          <img
+            src={ifloopLogo}
+            alt="ifLoop"
+            className="
+              h-24
+              object-contain
+              opacity-90
+              hover:opacity-100
+              transition-all
+              duration-500
+              hover:scale-105
+            "
+          />
+        </div>
     </main>
   );
 }
