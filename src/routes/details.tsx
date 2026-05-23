@@ -42,7 +42,7 @@ const WEDDING = {
   groom: "Yaswanth",
   dateISO: "2026-08-25T10:00:00+05:30",
   dateLabel: "23 August 2026",
-  day: "Saturday",
+  day: "Sunday",
   time: "10:30 to 11:30",
   venue: "Sri Kalyana Mandapam",
   address: "Athaloor, Thavanoor, Malappuram, Kerala",

@@ -11,7 +11,7 @@ const WEDDING = {
   bride: "Surya",
   groom: "Yaswanth",
   dateLabel: "23 August 2026",
-  day: "Saturday",
+  day: "Sunday",
   venue: "Sri Kalyana Mandapam, Hyderabad",
 };
 

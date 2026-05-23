@@ -5,6 +5,17 @@ import confetti from "canvas-confetti";
 import couple from "@/assets/couple.jpg";
 import { useMusic } from "@/hooks/use-music";
 
+import photo4 from "@/assets/photo4.jpeg";
+import photo5 from "@/assets/photo5.jpeg";
+import photo2 from "@/assets/photo2.jpeg";
+import photo3 from "@/assets/photo3.jpeg";
+
+const images = [couple, photo4, photo5,photo2,photo3];
+
+
+
+
+
 export const Route = createFileRoute("/thank-you")({
   head: () => ({
     meta: [
@@ -18,11 +29,11 @@ export const Route = createFileRoute("/thank-you")({
 const WEDDING = {
   bride: "Surya",
   groom: "Yaswanth",
-  dateLabel: "12 December 2026",
-  day: "Saturday",
-  time: "10:00 AM Onwards",
+  dateLabel: "23 August 2026",
+  day: "Sunday",
+  time: "10:30 to 11:30",
   venue: "Sri Kalyana Mandapam",
-  address: "MG Road, Hyderabad, Telangana, India",
+  address: "Athaloor, Thavanoor, Malappuram, Kerala",
   mapsUrl: "https://maps.google.com/?q=Sri+Kalyana+Mandapam+Hyderabad",
 };
 
@@ -41,6 +52,16 @@ function FloralCorner({ className = "" }: { className?: string }) {
 
 function ThankYou() {
   const { isPlaying: music, togglePlay: toggleMusic, playTrack } = useMusic();
+
+  const [currentImage, setCurrentImage] = useState(0);
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    setCurrentImage((prev) => (prev + 1) % images.length);
+  }, 3000);
+
+  return () => clearInterval(interval);
+}, []);
 
   useEffect(() => {
     playTrack("wedding");
@@ -98,20 +119,35 @@ function ThankYou() {
           </Link>
 
           {/* PORTRAIT — appears immediately with zoom-in */}
-          <div className="mx-auto max-w-xl animate-scale-in">
+        <div className="mx-auto max-w-xl animate-scale-in">
             <div className="relative overflow-hidden rounded-3xl border border-gold/40 shadow-soft aspect-[4/5]">
-              <img
-                src={couple}
-                alt={`${WEDDING.bride} and ${WEDDING.groom}`}
-                className="h-full w-full object-cover animate-fade-in"
-              />
+            <img
+              key={currentImage}
+              src={images[currentImage]}
+              alt={`${WEDDING.bride} and ${WEDDING.groom}`}
+              className="
+                h-full 
+                w-full 
+                object-cover 
+                transition-all 
+                duration-[2000ms] 
+                ease-in-out 
+                animate-smoothFade
+              "
+            />
+              
               <div className="absolute inset-0 ring-1 ring-inset ring-gold/30 rounded-3xl pointer-events-none" />
+
               <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-6 text-center">
-                <p className="text-[10px] uppercase tracking-[0.35em] text-gold mb-1">Forever Begins</p>
+                <p className="text-[10px] uppercase tracking-[0.35em] text-gold mb-1">
+                  Forever Begins
+                </p>
+
                 <p className="font-script text-4xl sm:text-5xl text-white drop-shadow">
                   {WEDDING.bride} &amp; {WEDDING.groom}
                 </p>
               </div>
+
             </div>
           </div>
 

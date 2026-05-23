@@ -262,3 +262,20 @@
       transform: translateY(0);
     }
   }
+  @keyframes smoothFade {
+  0% {
+    opacity: 0.1;
+    transform: scale(1.08);
+    filter: blur(3px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+}
+
+.animate-smoothFade {
+  animation: smoothFade 1.8s ease-in-out;
+}
