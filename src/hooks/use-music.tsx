@@ -78,7 +78,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     }
     timeoutRef.current = setTimeout(() => {
       pause();
-    }, 60000);
+    }, 45000);
   }, [pause]);
 
   const playTrack = useCallback((track: TrackType) => {
