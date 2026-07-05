@@ -49,11 +49,15 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
       if (audioRefs.current.wedding12) {
         audioRefs.current.wedding12.pause();
       }
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
     };
   }, []);
 
   const isPlayingRef = useRef(false);
   const currentTrackRef = useRef<TrackType>(null);
+  const timeoutRef = useRef<any>(null);
 
   const pause = useCallback(() => {
     const track = currentTrackRef.current;
@@ -62,7 +66,20 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     }
     isPlayingRef.current = false;
     setIsPlaying(false);
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
   }, []);
+
+  const startTimeout = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    timeoutRef.current = setTimeout(() => {
+      pause();
+    }, 30000);
+  }, [pause]);
 
   const playTrack = useCallback((track: TrackType) => {
     if (!track) {
@@ -89,14 +106,19 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         .then(() => {
           isPlayingRef.current = true;
           setIsPlaying(true);
+          startTimeout();
         })
         .catch((err) => {
           console.log(`Playback failed for track ${track}:`, err);
           isPlayingRef.current = false;
           setIsPlaying(false);
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+          }
         });
     }
-  }, [pause]);
+  }, [pause, startTimeout]);
 
   const togglePlay = useCallback(() => {
     const track = currentTrackRef.current;
@@ -108,19 +130,28 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
         currentAudio.pause();
         isPlayingRef.current = false;
         setIsPlaying(false);
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+          timeoutRef.current = null;
+        }
       } else {
         currentAudio.play()
           .then(() => {
             isPlayingRef.current = true;
             setIsPlaying(true);
+            startTimeout();
           })
           .catch(() => {
             isPlayingRef.current = false;
             setIsPlaying(false);
+            if (timeoutRef.current) {
+              clearTimeout(timeoutRef.current);
+              timeoutRef.current = null;
+            }
           });
       }
     }
-  }, []);
+  }, [startTimeout]);
 
   return (
     <MusicContext.Provider value={{ isPlaying, currentTrack, togglePlay, playTrack, pause }}>
