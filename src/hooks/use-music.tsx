@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from "react";
 import weddingMusic from "@/assets/wedding.mp3";
 import wedding12Music from "@/assets/wedding12.mp3";
 
@@ -52,13 +52,25 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const playTrack = (track: TrackType) => {
+  const isPlayingRef = useRef(false);
+  const currentTrackRef = useRef<TrackType>(null);
+
+  const pause = useCallback(() => {
+    const track = currentTrackRef.current;
+    if (track && audioRefs.current[track]) {
+      audioRefs.current[track]!.pause();
+    }
+    isPlayingRef.current = false;
+    setIsPlaying(false);
+  }, []);
+
+  const playTrack = useCallback((track: TrackType) => {
     if (!track) {
       pause();
       return;
     }
 
-    if (currentTrack === track && isPlaying) {
+    if (currentTrackRef.current === track && isPlayingRef.current) {
       return;
     }
 
@@ -71,38 +83,44 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
 
     const currentAudio = audioRefs.current[track];
     if (currentAudio) {
+      currentTrackRef.current = track;
       setCurrentTrack(track);
       currentAudio.play()
-        .then(() => setIsPlaying(true))
+        .then(() => {
+          isPlayingRef.current = true;
+          setIsPlaying(true);
+        })
         .catch((err) => {
           console.log(`Playback failed for track ${track}:`, err);
+          isPlayingRef.current = false;
           setIsPlaying(false);
         });
     }
-  };
+  }, [pause]);
 
-  const pause = () => {
-    if (currentTrack && audioRefs.current[currentTrack]) {
-      audioRefs.current[currentTrack]!.pause();
-    }
-    setIsPlaying(false);
-  };
+  const togglePlay = useCallback(() => {
+    const track = currentTrackRef.current;
+    if (!track) return;
 
-  const togglePlay = () => {
-    if (!currentTrack) return;
-    
-    const currentAudio = audioRefs.current[currentTrack];
+    const currentAudio = audioRefs.current[track];
     if (currentAudio) {
-      if (isPlaying) {
+      if (isPlayingRef.current) {
         currentAudio.pause();
+        isPlayingRef.current = false;
         setIsPlaying(false);
       } else {
         currentAudio.play()
-          .then(() => setIsPlaying(true))
-          .catch(() => setIsPlaying(false));
+          .then(() => {
+            isPlayingRef.current = true;
+            setIsPlaying(true);
+          })
+          .catch(() => {
+            isPlayingRef.current = false;
+            setIsPlaying(false);
+          });
       }
     }
-  };
+  }, []);
 
   return (
     <MusicContext.Provider value={{ isPlaying, currentTrack, togglePlay, playTrack, pause }}>

@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Heart, MapPin, Calendar, Clock, ArrowLeft, Music, Music2, Sparkles, Flower2, Share2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import confetti from "canvas-confetti";
+import { useEffect, useState } from "react";
 import couple from "@/assets/couple.jpg";
 import { useMusic } from "@/hooks/use-music";
 
@@ -32,9 +31,9 @@ const WEDDING = {
   dateLabel: "23 August 2026",
   day: "Sunday",
   time: "10:30 to 11:30",
-  venue: "Sri Kalyana Mandapam",
+  venue: "Kunjinayil Bhagavathikshetram Athaloor",
   address: "Athaloor, Thavanoor, Malappuram, Kerala",
-  mapsUrl: "https://maps.google.com/?q=Sri+Kalyana+Mandapam+Hyderabad",
+  mapsUrl: "https://maps.app.goo.gl/DyR4qGthZLZkhoA57?g_st=ac",
 };
 
 function FloralCorner({ className = "" }: { className?: string }) {
@@ -51,7 +50,7 @@ function FloralCorner({ className = "" }: { className?: string }) {
 }
 
 function ThankYou() {
-  const { isPlaying: music, togglePlay: toggleMusic, playTrack } = useMusic();
+  const { isPlaying: music, togglePlay: toggleMusic } = useMusic();
 
   const [currentImage, setCurrentImage] = useState(0);
 
@@ -62,32 +61,6 @@ useEffect(() => {
 
   return () => clearInterval(interval);
 }, []);
-
-  useEffect(() => {
-    playTrack("wedding");
-  }, [playTrack]);
-
-  useEffect(() => {
-    const rose = ["#c0392b", "#e74c3c", "#ff6b6b", "#d4af37", "#f8c8d8"];
-    const fire = (particleRatio: number, opts: confetti.Options) =>
-      confetti({ origin: { y: 0.7 }, colors: rose, ...opts, particleCount: Math.floor(220 * particleRatio) });
-
-    fire(0.25, { spread: 26, startVelocity: 55, scalar: 1.2, shapes: ["circle"] });
-    fire(0.2, { spread: 60, scalar: 1 });
-    fire(0.35, { spread: 100, decay: 0.91, scalar: 0.9 });
-    fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-    fire(0.1, { spread: 120, startVelocity: 45 });
-
-    const interval = setInterval(() => {
-      confetti({ particleCount: 6, angle: 60, spread: 70, origin: { x: 0, y: 0.8 }, colors: rose, scalar: 1.1 });
-      confetti({ particleCount: 6, angle: 120, spread: 70, origin: { x: 1, y: 0.8 }, colors: rose, scalar: 1.1 });
-    }, 600);
-    const stop = setTimeout(() => clearInterval(interval), 5500);
-    return () => {
-      clearInterval(interval);
-      clearTimeout(stop);
-    };
-  }, []);
 
   const shareWA = () => {
     const text = `I'll be celebrating ${WEDDING.bride} & ${WEDDING.groom}'s wedding on ${WEDDING.dateLabel}!`;

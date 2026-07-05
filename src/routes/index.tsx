@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
-import { Flower2, Heart, Sparkles, ArrowRight, Music, Music2, Share2 } from "lucide-react";
+import { useState } from "react";
+import { Flower2, Heart, Sparkles, Share2 } from "lucide-react";
 import { useMusic } from "@/hooks/use-music";
 
 export const Route = createFileRoute("/")({
@@ -12,89 +12,58 @@ const WEDDING = {
   groom: "Yaswanth",
   dateLabel: "23 August 2026",
   day: "Sunday",
-  venue: "Sri Kalyana Mandapam, Hyderabad",
+  venue: "Kunjinayil Bhagavathikshetram Athaloor",
 };
 
-function LoadingScreen({ onDone }: { onDone: () => void }) {
-  const [progress, setProgress] = useState(0);
-  const onDoneRef = useRef(onDone);
-  onDoneRef.current = onDone;
-  useEffect(() => {
-    const start = Date.now();
-    const duration = 2200;
-    const id = setInterval(() => {
-      const p = Math.min(100, ((Date.now() - start) / duration) * 100);
-      setProgress(p);
-      if (p >= 100) {
-        clearInterval(id);
-        setTimeout(() => onDoneRef.current(), 400);
-      }
-    }, 30);
-    return () => clearInterval(id);
-  }, []);
+function TapButton({ onClick }: { onClick: () => void }) {
+  const [tapped, setTapped] = useState(false);
 
-  const radius = 54;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
+  const handleTap = () => {
+    if (tapped) return;
+    setTapped(true);
+    onClick();
+  };
 
   return (
-    <div className="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center bg-background">
-     <div className="flex flex-col items-center justify-center text-center px-6">
-        <Flower2 className="text-gold mb-6" size={48} />
-        <p className="gold-divider mb-4">Shubh Vivah</p>
+    <div className="fixed inset-0 z-[100] flex h-screen w-screen flex-col items-center justify-center bg-background">
+      <div className="flex flex-col items-center justify-center text-center px-6">
+        <Flower2 className="text-gold mb-6 animate-float" size={48} />
+        <p className="gold-divider mb-4">॥ Shubh Vivah ॥</p>
         <h2 className="font-script text-5xl sm:text-6xl text-primary mb-10">
           {WEDDING.bride} &amp; {WEDDING.groom}
         </h2>
-        
-        {/* Beautiful Ornate Circular Progress Loader */}
-        <div className="relative flex items-center justify-center w-28 h-28 sm:w-36 sm:h-36">
-          {/* Decorative Outer Ring */}
-          <div className="absolute inset-0 rounded-full border border-dashed border-gold/30 animate-[spin_20s_linear_infinite]" />
-          
-          {/* Decorative Inner Ring with soft gold glow */}
-          <div className="absolute inset-2 rounded-full border border-gold/15 shadow-[0_0_15px_oklch(0.74_0.13_80_/_0.1)]" />
 
-          {/* SVG Progress Arc with explicit viewBox to guarantee centering in all mobile viewports */}
-          <svg className="h-full transform -rotate-90" viewBox="0 0 144 144">
-            {/* Background track circle */}
-            <circle
-              cx="72"
-              cy="72"
-              r={radius}
-              className="text-secondary/40"
-              strokeWidth="3.5"
-              stroke="currentColor"
-              fill="transparent"
-            />
-            {/* Active progress circle with gradient color */}
-            <circle
-              cx="72"
-              cy="72"
-              r={radius}
-              className="text-gold transition-[stroke-dashoffset] duration-150 ease-out"
-              strokeWidth="4"
-              stroke="currentColor"
-              fill="transparent"
-              strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
-              strokeLinecap="round"
-              style={{
-                filter: "drop-shadow(0px 2px 4px oklch(0.74 0.13 80 / 0.3))"
-              }}
-            />
-          </svg>
+        {/* Tap to Open button with ripple effect */}
+        <button
+          id="tap-to-open-btn"
+          onClick={handleTap}
+          disabled={tapped}
+          className="relative group mt-2"
+          aria-label="Tap to open invitation"
+        >
+          {/* Outer pulsing ring */}
+          <span className="absolute -inset-4 rounded-full border border-gold/30 animate-ping opacity-60" />
+          <span className="absolute -inset-2 rounded-full border border-gold/20 animate-ping opacity-40" style={{ animationDelay: "0.4s" }} />
 
-          {/* Center text showing percentage with inset-0 to guarantee true dead center alignment */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <Heart className="text-gold/40 fill-gold/10 animate-pulse mb-0.5" size={16} />
-            <span className="font-serif-display text-xl font-medium text-primary tabular-nums">
-              {Math.floor(progress)}%
+          {/* Main circular button */}
+          <span
+            className={`relative flex h-32 w-32 sm:h-36 sm:w-36 flex-col items-center justify-center rounded-full border-2 border-gold bg-gold/10 shadow-[0_0_30px_oklch(0.74_0.13_80_/_0.25)] backdrop-blur transition-all duration-300 ${
+              tapped ? "scale-95 opacity-60" : "hover:scale-105 hover:bg-gold/20 active:scale-95"
+            }`}
+          >
+            <Heart className="text-gold fill-gold/30 mb-1 animate-shimmer" size={28} />
+            <span className="font-serif-display text-sm font-semibold text-primary uppercase tracking-[0.2em] leading-tight">
+              {tapped ? "Opening…" : "Tap to"}
             </span>
-            <span className="text-[8px] uppercase tracking-[0.2em] text-muted-foreground mt-0.5">
-              Loading
+            <span className="font-serif-display text-sm font-semibold text-gold uppercase tracking-[0.25em]">
+              {tapped ? "" : "Open"}
             </span>
-          </div>
-        </div>
+          </span>
+        </button>
+
+        <p className="mt-8 text-[10px] uppercase tracking-[0.35em] text-muted-foreground animate-pulse">
+          Tap to view your invitation
+        </p>
       </div>
     </div>
   );
@@ -143,22 +112,10 @@ function Mandala({ className = "" }: { className?: string }) {
 }
 function Poster() {
   const navigate = useNavigate();
-
-  const [loading, setLoading] = useState(false);
-
+  const [showTap, setShowTap] = useState(true);
   const { playTrack } = useMusic();
 
-  useEffect(() => {
-    setLoading(true);
-
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleSeeMore = () => {
+  const handleOpen = () => {
     playTrack("wedding12");
     navigate({ to: "/details" });
   };
@@ -170,7 +127,7 @@ function Poster() {
 
   return (
     <>
-      {loading && <LoadingScreen onDone={() => setLoading(false)} />}
+      {showTap && <TapButton onClick={handleOpen} />}
 
       <Flower2 className="pointer-events-none fixed left-4 top-24 text-sage opacity-30 animate-float" size={48} />
       <Sparkles className="pointer-events-none fixed right-6 top-1/3 text-gold opacity-40 animate-float" size={28} style={{ animationDelay: "2s" }} />
@@ -233,12 +190,9 @@ function Poster() {
           </div>
 
           <div className="mt-10">
-            <button onClick={handleSeeMore} className="btn-gold">
-              See More <ArrowRight size={16} />
+            <button onClick={handleOpen} className="btn-gold">
+              Open Invitation
             </button>
-            <p className="mt-4 text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
-              View Invitation Details
-            </p>
           </div>
         </div>
 

@@ -45,9 +45,9 @@ const WEDDING = {
   dateLabel: "23 August 2026",
   day: "Sunday",
   time: "10:30 to 11:30",
-  venue: "Sri Kalyana Mandapam",
+  venue: "Kunjinayil Bhagavathikshetram Athaloor",
   address: "Athaloor, Thavanoor, Malappuram, Kerala",
-  mapsUrl: "https://maps.google.com/?q=Sri+Kalyana+Mandapam+Hyderabad",
+  mapsUrl: "https://maps.app.goo.gl/DyR4qGthZLZkhoA57?g_st=ac",
 };
 
 const STORY = [
@@ -121,7 +121,6 @@ function Details() {
   }, [playTrack]);
 
   const handleAccept = () => {
-    playTrack("wedding");
     navigate({ to: "/thank-you" });
   };
 
@@ -129,7 +128,7 @@ function Details() {
     const text = `You're invited to ${WEDDING.bride} & ${WEDDING.groom}'s wedding on ${WEDDING.dateLabel}. ${typeof window !== "undefined" ? window.location.href : ""}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState<number | null>(null);
 
   return (
     <main className="relative overflow-hidden">
@@ -256,7 +255,7 @@ function Details() {
 
       <div className="mt-10 flex justify-center">
         <a
-          href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+Day&dates=20260823T100000Z/20260823T180000Z&details=Join+us+for+our+wedding+celebration&location=Wedding+Venue"
+          href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+Day&dates=20260823T100000Z/20260823T180000Z&details=Join+us+for+our+wedding+celebration&location=Kunjinayil+Bhagavathikshetram+Athaloor"
           target="_blank"
           rel="noopener noreferrer"
           className="rounded-full border border-gold bg-gold/10 px-8 py-3 text-sm uppercase tracking-[0.25em] text-gold transition duration-300 hover:bg-gold hover:text-white"
